@@ -6,7 +6,7 @@ import userroute from "./Routes/user.route.js";
 import cors from "cors";
 
 // 1️⃣ Load environment variables FIRST
-dotenv.config();
+dotenv.config({});
 
 // 2️⃣ Connect to MongoDB
 connectDB();
@@ -14,12 +14,16 @@ connectDB();
 const app = express();
 
 // 3️⃣ Middleware setup
-app.use(cors()); // Enable CORS
+
+app.use(cors({
+    origin: 'http://localhost:5173', // ✅ Frontend's origin
+    credentials: true               // ✅ Allow cookies/auth headers
+  }));
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
 
 // 4️⃣ Routes
-app.use("/api/auth", userroute);
+app.use("/api/v1/user", userroute);
 
 // 5️⃣ Start the server
 const PORT = process.env.PORT || 8080; // Fallback to 8080 if PORT is not set

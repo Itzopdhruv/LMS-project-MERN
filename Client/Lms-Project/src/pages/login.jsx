@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+// import { useNavigate } from "react-router-dom"
 import {
   Card,
   CardContent,
@@ -17,7 +18,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi"
-import { useNavigate } from "react-router"
+import { useNavigate,Link } from "react-router-dom"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -46,7 +47,7 @@ export function Login() {
       isSuccess: loginIsSuccess,
     },
   ] = useLoginUserMutation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
    const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
     if (type === "signup") {
@@ -60,28 +61,30 @@ export function Login() {
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   };
-  useEffect(() => {
-    if(registerIsSuccess && registerData){
-      toast.success(registerData.message || "Signup successful.")
-    }
-    if(registerError){
-      toast.error(registerError.data.message || "Signup Failed");
-    }
-    if(loginIsSuccess && loginData){
-      toast.success(loginData.message || "Login successful.");
-      // navigate("/");
-    }
-    if(loginError){ 
-      toast.error(loginError.data.message || "login Failed");
-    }
-  }, [
-    loginIsLoading,
-    registerIsLoading,
-    loginData,
-    registerData,
-    loginError,
-    registerError,
-  ]);
+// ✅ Handle register
+useEffect(() => {
+  if (registerIsSuccess && registerData) {
+    toast.success(registerData.message || "Signup successful.");
+    // resetRegister();
+  } else if (registerError) {
+    toast.error(registerError?.data?.message || "Signup Failed");
+    // resetRegister();
+  }
+}, [registerIsSuccess, registerData, registerError]);
+
+// ✅ Handle login
+useEffect(() => {
+  if (loginIsSuccess && loginData) {
+    toast.success(loginData.message || "Login successful.");
+    // resetLogin();
+    navigate("/");
+  } else if (loginError) {
+    toast.error(loginError?.data?.message || "Login Failed");
+    // resetLogin();
+  }
+}, [loginIsSuccess, loginData, loginError]);
+
+
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       <Tabs defaultValue="Login" className="w-full max-w-md">

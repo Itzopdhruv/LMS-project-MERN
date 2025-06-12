@@ -10,15 +10,16 @@ dotenv.config({});
 
 // 2️⃣ Connect to MongoDB
 connectDB();
-
+console.log("Mongo connect or not")
 const app = express();
 
 // 3️⃣ Middleware setup
 
 app.use(cors({
-    origin: 'http://localhost:5173', // ✅ Frontend's origin
-    credentials: true               // ✅ Allow cookies/auth headers
-  }));
+  origin: ["http://localhost:5173", "http://localhost:5174"], // ✅ Allow both
+  credentials: true,
+}));
+
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
 

@@ -6,6 +6,7 @@ import { useTheme } from './components/ui/ThemeProvider'
 
 const DarkMode = () => {
   const {setTheme} = useTheme();
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

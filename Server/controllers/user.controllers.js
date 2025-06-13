@@ -1,6 +1,8 @@
 import { User } from "../Models/user.model.js";
+
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { Course } from "../Models/course.model.js";
 // import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 export const register = async (req,res) => {
     try {
@@ -12,7 +14,7 @@ export const register = async (req,res) => {
                 message:"All fields are required."
             })
         }
-        const user = await User.findOne({email});
+        let user = await User.findOne({email});
         if(user){
             return res.status(400).json({
                 success:false,
@@ -20,15 +22,14 @@ export const register = async (req,res) => {
             })
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({
+        user = await User.create({
             name,
             email,
             password:hashedPassword
         });
-        return res.status(201).json({
-            success:true,
-            message:"Account created successfully."
-        })
+        generateToken(res, user, `Welcome back ${user.name}`);
+        
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -88,12 +89,14 @@ export const getUserProfile = async (req,res) => {
     try {
         const userId = req.id;
         const user = await User.findById(userId).select("-password").populate("enrolledCourses");
+        console.log(user);
         if(!user){
             return res.status(404).json({
                 message:"Profile not found",
                 success:false
             })
         }
+        
         return res.status(200).json({
             success:true,
             user

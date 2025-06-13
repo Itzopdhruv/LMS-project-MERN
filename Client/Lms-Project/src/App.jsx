@@ -4,6 +4,8 @@ import {Login} from "./pages/Login";
 import HeroSection from "./pages/student/HeroSection";
 import MainLayout from "./layout/MainLayout";
 import { ThemeProvider } from "./components/ui/ThemeProvider";
+import { AuthenticatedUser, ProtectedRoute } from "./components/ProtectedRoutes";
+import Profile from "./pages/student/Profile";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -21,9 +23,17 @@ const appRouter = createBrowserRouter([
       {
         path: "login",
         element: (
-          // <AuthenticatedUser>
+          <AuthenticatedUser>
           <Login />
-          // </AuthenticatedUser>
+           </AuthenticatedUser>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+           </ProtectedRoute>
         ),
       },
     ],

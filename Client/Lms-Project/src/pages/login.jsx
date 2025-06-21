@@ -18,7 +18,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi"
-import { useNavigate,Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -45,10 +45,11 @@ export function Login() {
       error: loginError,
       isLoading: loginIsLoading,
       isSuccess: loginIsSuccess,
+
     },
   ] = useLoginUserMutation();
   const navigate = useNavigate();
-   const changeInputHandler = (e, type) => {
+  const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
     if (type === "signup") {
       setSignupInput({ ...signupInput, [name]: value });
@@ -56,34 +57,33 @@ export function Login() {
       setLoginInput({ ...loginInput, [name]: value });
     }
   };
-   const handleRegistration = async (type) => {
+  // s
+  const handleRegistration = async (type) => {
     const inputData = type === "signup" ? signupInput : loginInput;
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   };
-// ✅ Handle register
-useEffect(() => {
-  if (registerIsSuccess && registerData) {
-    toast.success( "Signup successful.");
-    navigate("/");
-    // resetRegister();
-  } else if (registerError) {
-    toast.error(registerError?.data?.message || "Signup Failed");
-    // resetRegister();
-  }
-}, [registerIsSuccess, registerData, registerError]);
+  // ✅ Handle register
+  useEffect(() => {
+    if (registerIsSuccess && registerData) {
+      toast.success("Signup successful.");
+      navigate("/");
+      // resetRegister();
+    } else if (registerError) {
+      toast.error(registerError?.data?.message || "Signup Failed");
+      // resetRegister();
+    }
+  }, [registerIsSuccess, registerData, registerError]);
 
-// ✅ Handle login
-useEffect(() => {
-  if (loginIsSuccess && loginData) {
-    toast.success(loginData.message || "Login successful.");
-    // resetLogin();
-    navigate("/");
-  } else if (loginError) {
-    toast.error(loginError?.data?.message || "Login Failed");
-    // resetLogin();
-  }
-}, [loginIsSuccess, loginData, loginError]);
+  useEffect(() => {
+    if (loginIsSuccess && loginData) {
+      toast.success(loginData?.message || "Login successful.");
+      navigate("/");
+    } else if (loginError) {
+      toast.error(loginError?.data?.message || "Login Failed");
+      // resetLogin();
+    }
+  }, [loginIsSuccess, loginData, loginError]);
 
 
   return (
@@ -96,7 +96,7 @@ useEffect(() => {
 
         {/* Signup Form */}
         <TabsContent value="signup">
-         <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl shadow-xl border border-gray-200 rounded-2xl">
+          <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl shadow-xl border border-gray-200 rounded-2xl">
             <CardHeader>
               <CardTitle className="text-xl font-semibold">Signup</CardTitle>
               <CardDescription>
@@ -106,7 +106,7 @@ useEffect(() => {
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="signup-name">Name</Label>
-                <Input id="signup-name"   name="name"
+                <Input id="signup-name" name="name"
                   value={signupInput.name}
                   onChange={(e) => changeInputHandler(e, "signup")} type="text" placeholder="Eg. abc" required />
               </div>
@@ -119,13 +119,13 @@ useEffect(() => {
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="signup-password">Password</Label>
-                <Input id="signup-password"   name="password"
+                <Input id="signup-password" name="password"
                   value={signupInput.password}
                   onChange={(e) => changeInputHandler(e, "signup")} type="password" placeholder="Eg. abc@123" required />
               </div>
             </CardContent>
             <CardFooter>
-            <Button
+              <Button
                 disabled={registerIsLoading}
                 onClick={() => handleRegistration("signup")}
               >
@@ -154,18 +154,18 @@ useEffect(() => {
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="login-email">Email</Label>
-                <Input id="login-email" type="email"   name="email"
+                <Input id="login-email" type="email" name="email"
                   value={loginInput.email}
                   onChange={(e) => changeInputHandler(e, "login")} placeholder="Eg. abc@gmail.com" required />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="login-password">Password</Label>
                 <Input id="login-password" type="password" name="password"
-                  value={loginInput.password}    onChange={(e) => changeInputHandler(e, "login")} placeholder="Eg. abc@123" required />
+                  value={loginInput.password} onChange={(e) => changeInputHandler(e, "login")} placeholder="Eg. abc@123" required />
               </div>
             </CardContent>
             <CardFooter>
-            <Button
+              <Button
                 disabled={loginIsLoading}
                 onClick={() => handleRegistration("login")}
               >

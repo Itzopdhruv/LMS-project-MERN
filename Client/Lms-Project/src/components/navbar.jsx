@@ -31,13 +31,14 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
+
   const logoutHandler = async () => {
     await logoutUser();
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data?.message || "User log out.");
+      toast.success(data?.message || "User logged out.");
       navigate("/login");
     }
   }, [isSuccess]);
@@ -49,12 +50,10 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <School size={"30"} />
           <Link to="/">
-            <h1 className="hidden md:block font-extrabold text-2xl">
-              E-Learning
-            </h1>
+            <h1 className="hidden md:block font-extrabold text-2xl">E-Learning</h1>
           </Link>
         </div>
-        {/* User icons and dark mode icon  */}
+
         <div className="flex items-center gap-8">
           {user ? (
             <DropdownMenu>
@@ -62,49 +61,49 @@ const Navbar = () => {
                 <Avatar>
                   <AvatarImage
                     src={user?.photoUrl || "https://github.com/shadcn.png"}
-                    alt="@shadcn"
+                    alt="@user"
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel className="font-semibold">My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link to="my-learning">My learning</Link>
+                    <Link to="/my-learning">My Learning</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    {" "}
-                    <Link to="profile">Edit Profile</Link>{" "}
+                    <Link to="/profile">Edit Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logoutHandler}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={logoutHandler}>
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="/admin/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => navigate("/login")}>
-                Login
-              </Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>Login</Button>
               <Button onClick={() => navigate("/login")}>Signup</Button>
             </div>
           )}
           <DarkMode />
         </div>
       </div>
-      {/* Mobile device  */}
+
+      {/* Mobile */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <h1 className="font-extrabold text-2xl">E-learning</h1>
-        <MobileNavbar user={user}/>
+        <h1 className="font-extrabold text-2xl">E-Learning</h1>
+        <MobileNavbar user={user} onLogout={logoutHandler} />
       </div>
     </div>
   );
@@ -112,37 +111,59 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({user}) => {
+// ----------------------------
+
+const MobileNavbar = ({ user, onLogout }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          size="icon"
-          className="rounded-full hover:bg-gray-200"
-          variant="outline"
-        >
+        <Button size="icon" className="rounded-full hover:bg-gray-200" variant="outline">
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle> <Link to="/">E-Learning</Link></SheetTitle>
-          <DarkMode />
+
+      <SheetContent className="flex flex-col p-4 space-y-4">
+        <SheetHeader>
+          <SheetTitle className="text-xl font-bold">Menu</SheetTitle>
         </SheetHeader>
-        <Separator className="mr-2" />
-        <nav className="flex flex-col space-y-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <p>Log out</p>
+
+        <Separator className="my-2" />
+
+        <nav className="flex flex-col gap-4 text-base font-medium">
+          <SheetClose asChild>
+            <Link to="/my-learning">My Learning</Link>
+          </SheetClose>
+          <SheetClose asChild>
+            <Link to="/profile">Edit Profile</Link>
+          </SheetClose>
+
+          {user && (
+            <p
+              onClick={onLogout}
+              className="cursor-pointer text-red-600 hover:underline"
+            >
+              Log out
+            </p>
+          )}
+
+          <div className="pt-2">
+            <DarkMode />
+          </div>
         </nav>
+
         {user?.role === "instructor" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" onClick={()=> navigate("/admin/dashboard")}>Dashboard</Button>
-            </SheetClose>
-          </SheetFooter>
+          <>
+            <Separator className="my-2" />
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button className="w-full font-bold" onClick={() => navigate("/admin/dashboard")}>
+                  Go to Dashboard
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+          </>
         )}
       </SheetContent>
     </Sheet>

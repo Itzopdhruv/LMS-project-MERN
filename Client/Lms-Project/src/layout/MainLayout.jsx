@@ -3,7 +3,7 @@ import React from 'react'
 import Navbar from '@/components/navbar'
 function MainLayout() {
     return (
-        <div>
+        <div className='w-full'>
             <Navbar />  
             <Outlet />
         </div>

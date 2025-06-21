@@ -16,9 +16,10 @@ const Custom = ({ children }) => {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
   <Provider store={appStore}>
-       
+       <Custom>
       <App />
       <Toaster/>
+      </Custom>
     
   </Provider>
 </StrictMode>

@@ -55,7 +55,7 @@ export const createCheckoutSession = async (req, res) => {
 
 export const razorpayWebhook = async (req, res) => {
   console.log("🛎 Webhook endpoint HIT!");
-console.log("Event:", req.body.event);
+// console.log("Event:", req.body.event);
 
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET; // same secret set in Razorpay dashboard
 
@@ -68,6 +68,7 @@ console.log("Event:", req.body.event);
     .digest("hex");
 
   if (signature !== expectedSignature) {
+    console.log("HI i am prem duffeer");
     console.error("⚠️ Invalid webhook signature");
     return res.status(400).send("Invalid signature");
   }
@@ -84,6 +85,7 @@ console.log("Event:", req.body.event);
       }).populate({ path: "courseId" });
 
       if (!purchase) {
+        console.log("HI i am prem duffeer");
         return res.status(404).json({ message: "Purchase not found" });
       }
 
@@ -131,15 +133,21 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
       .populate({ path: "lectures" });
 
     const purchased = await CoursePurchase.findOne({ userId, courseId });
-    console.log(purchased);
+    // console.log(purchased);
 
     if (!course) {
       return res.status(404).json({ message: "course not found!" });
     }
-
+    if(!purchased){
+      return res.status(200).json({
+        course,
+        purchased: false, // true if purchased, false otherwise
+      })
+    }
+    console.log(purchased.status);
     return res.status(200).json({
       course,
-      purchased: !!purchased, // true if purchased, false otherwise
+      purchased: purchased.status === "completed" ? true : false, // true if purchased, false otherwise
     });
   } catch (error) {
     console.log(error);

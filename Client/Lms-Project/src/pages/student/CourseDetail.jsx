@@ -20,12 +20,12 @@ const CourseDetail = () => {
   const courseId = params.courseId;
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetCourseDetailWithStatusQuery(courseId);
-
+  
   if (isLoading) return <h1 className="text-center text-lg font-semibold">Loading...</h1>;
   if (isError) return <h1 className="text-center text-red-500">Failed to load course details</h1>;
 
   const { course, purchased } = data;
-  console.log(purchased);
+  // console.log(purchased , "HIiiiiiii");
 
   const handleContinueCourse = () => {
     if (purchased) {
@@ -77,7 +77,7 @@ const CourseDetail = () => {
             <CardContent className="space-y-4 max-h-[350px] overflow-y-auto hide-scrollbar pr-2">
               {course.lectures.map((lecture, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-base font-medium text-gray-800">
-                   {lecture._id===course.lectures[0]._id ?<PlayCircle size={20} /> :
+                   {lecture.isPreviewFree === true ?<PlayCircle size={20} /> :
                       (
                         purchased ? <PlayCircle size={20} /> :  <Lock size={20} />
                       )

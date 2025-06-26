@@ -1,12 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseapi";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const Dashboard = () => {
 
-  const {data, isSuccess, isError, isLoading} = useGetPurchasedCoursesQuery();
-
+  const {data, isSuccess, isError, isLoading , refetch} = useGetPurchasedCoursesQuery();
+  let user = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    refetch();
+  }, [user])
+  
   if(isLoading) return <h1>Loading...</h1>
   if(isError) return <h1 className="text-red-500">Failed to get purchased course</h1>
 

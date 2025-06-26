@@ -153,9 +153,10 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
     console.log(error);
   }
 };
-export const getAllPurchasedCourse = async (_, res) => {
+export const getAllPurchasedCourse = async (req, res) => {
   try {
-    const purchasedCourse = await CoursePurchase.find({
+    let userId = req.id;
+    let purchasedCourse = await CoursePurchase.find({
       status: "completed",
     }).populate("courseId");
     if (!purchasedCourse) {
@@ -163,6 +164,8 @@ export const getAllPurchasedCourse = async (_, res) => {
         purchasedCourse: [],
       });
     }
+
+    purchasedCourse = purchasedCourse.filter(p => p.courseId?.creator?._id?.toString() === userId);
     return res.status(200).json({
       purchasedCourse,
     });

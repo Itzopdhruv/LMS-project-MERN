@@ -27,6 +27,7 @@ export function Login() {
     name: "",
     email: "",
     password: "",
+    role: "student",
   });
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
   const [
@@ -122,6 +123,20 @@ export function Login() {
                 <Input id="signup-password" name="password"
                   value={signupInput.password}
                   onChange={(e) => changeInputHandler(e, "signup")} type="password" placeholder="Eg. abc@123" required />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="signup-role">Role</Label>
+                <select
+                  id="signup-role"
+                  name="role"
+                  value={signupInput.role}
+                  onChange={(e) => changeInputHandler(e, "signup")}
+                  className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  required
+                >
+                  <option value="student">student</option>
+                  <option value="instructor">instructor</option>
+                </select>
               </div>
             </CardContent>
             <CardFooter>

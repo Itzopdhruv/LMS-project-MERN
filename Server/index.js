@@ -19,7 +19,7 @@ const app = express();
 // 3️⃣ Middleware setup
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"], // ✅ Allow both
+  origin: ["https://lms-project-mern-frontend.onrender.com"], // ✅ Allow both
   credentials: true,
 }));
 
